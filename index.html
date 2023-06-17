@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>String to SHA-256 Converter</title>
+  <style>
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 50px;
+    }
+
+
+    h1{
+      color: rgb(3, 40, 76);
+      font-family: Georgia, 'Times New Roman', Times, serif;
+    }
+
+    textarea {
+      width: 500px;
+      height: 90px;
+      padding: 10px;
+      font-size: 16px;
+      font-weight: 300;
+      transition: all 0.3s ease;
+    }
+
+    textarea:focus {
+      border-color: #7983ff;
+      box-shadow: 0 0 5px #7983ff;
+      transform: scale(1.1);
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: rgb(3, 40, 76);
+      color: #fff;
+      border: none;
+      border-radius: 15px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .result {
+      margin-top: 20px;
+    }
+
+    .result p {
+      font-size: 18px;
+      font-family: 'Courier New', Courier, monospace;
+      word-wrap: break-word;
+      padding: 12px;
+      border: 2px solid white;
+      background-color: lightblue;
+      border-radius: 15px;
+      color:black;
+      font-weight: 600;
+    }
+
+    .background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="animated-background">SHA-256 Hash Converter</h1>
+    <br>
+    <textarea id="inputString" name="text" rows="4" cols="100" placeholder="Enter a Text" spellcheck="false"></textarea>
+    <br><br>
+    <button onclick="convertToSHA256()">Convert</button>
+    <div id="result" class="result"></div>
+  </div>
+
+  <div class="background">
+    <img src="https://qph.cf2.quoracdn.net/main-qimg-8c29c361bd11f6892802e939e3d041da" alt="3D Animation" width="50%" height="40%" style="margin-left: 30%; margin-top: 29%;">
+  </div>
+
+  <script>
+    function convertToSHA256() {
+      var inputString = document.getElementById("inputString").value;
+
+      if (inputString.trim() !== "") {
+        var resultDiv = document.getElementById("result");
+
+        resultDiv.innerHTML = "";
+
+        sha256(inputString).then(hashedString => {
+          var resultElement = document.createElement("p");
+          resultElement.innerText = hashedString.toUpperCase(); // Convert to uppercase
+          resultDiv.appendChild(resultElement);
+        });
+      }
+    }
+
+    async function sha256(input) {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(input);
+
+      const buffer = await crypto.subtle.digest("SHA-256", data);
+
+      const hashArray = Array.from(new Uint8Array(buffer));
+      const hashedString = hashArray
+        .map(byte => byte.toString(16).padStart(2, "0"))
+        .join("");
+
+      return hashedString;
+    }
+  </script>
+</body>
+</html>
